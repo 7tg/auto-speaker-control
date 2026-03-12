@@ -15,8 +15,10 @@ mkdir -p "$SERVICE_DIR"
 cat > "$SERVICE_FILE" <<EOF
 [Unit]
 Description=Auto Speaker Control (Tapo smart plug)
-After=pipewire.service
+After=pipewire.service network-online.target
 Requires=pipewire.service
+Wants=network-online.target
+Conflicts=sleep.target
 
 [Service]
 Type=simple
