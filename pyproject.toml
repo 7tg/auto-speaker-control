@@ -1,0 +1,9 @@
+[project]
+name = "auto-speaker-control"
+version = "0.1.0"
+description = "Automatic speaker power management via TP-Link Tapo smart plug"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "tapo>=0.8.12",
+]
