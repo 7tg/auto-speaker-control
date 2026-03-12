@@ -128,6 +128,7 @@ async def main():
                 last_audio_time = time.monotonic()
                 if not speakers_on:
                     log.info("Audio detected, turning speakers on")
+                    await device.refresh_session()
                     await device.on()
                     speakers_on = True
             else:
@@ -138,6 +139,7 @@ async def main():
                             "No audio for %d seconds, turning speakers off",
                             int(idle_seconds),
                         )
+                        await device.refresh_session()
                         await device.off()
                         speakers_on = False
         except Exception as e:
@@ -148,10 +150,14 @@ async def main():
         except asyncio.TimeoutError:
             pass
 
-    # Shutdown: turn off speakers with retry
+    # Shutdown: turn off speakers with retry and fresh session
     log.info("Shutting down, turning speakers off")
     for attempt in range(3):
         try:
+            if attempt > 0:
+                device = await connect_plug()
+            else:
+                await device.refresh_session()
             await device.off()
             log.info("Speakers turned off successfully")
             break
